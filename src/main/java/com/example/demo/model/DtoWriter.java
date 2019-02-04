@@ -28,20 +28,18 @@ public class DtoWriter implements ItemWriter<List<LookUpData>> {
 	    }
 
 		
+	    PreparedStatement st = conn.prepareStatement("INSERT INTO GOV_FIN_LOOKUP (attribute_mapping_id,location_id,value,year) values ( ?, ?, ?, ?)");
 		
-	    
 		for (List<LookUpData> l : items) {
 			for (LookUpData ll : l) {
 				
 				try {
-				PreparedStatement st = conn.prepareStatement("INSERT INTO GOV_FIN_LOOKUP (attribute_mapping_id,location_id,value,year) values ( ?, ?, ?, ?)");
-				//st.setInt(1, i++);
+					//st.setInt(1, i++);
 				st.setInt(1, ll.attribute_mapping_id);
 				st.setInt(2, ll.location_id);
 				st.setDouble(3, ll.value);
 				st.setInt(4, ll.year);
 				st.executeUpdate();
-				st.close();
 				
 				}
 				catch(Exception e) {
@@ -54,7 +52,11 @@ public class DtoWriter implements ItemWriter<List<LookUpData>> {
 				stmnt.executeUpdate(sql);*/
 				
 			}
+			
+			System.out.println("done for record: "+i++);
+			
 		}
+		st.close();
 
 		System.out.println("Batch done");
 	}
