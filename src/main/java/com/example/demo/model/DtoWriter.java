@@ -4,12 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class DtoWriter implements ItemWriter<List<LookUpData>> {
 
@@ -20,6 +17,7 @@ public class DtoWriter implements ItemWriter<List<LookUpData>> {
 	@Override
 	public void write(List<? extends List<LookUpData>> items) throws Exception {
 
+		int i = 0;
 		Connection conn = null;
 	    try {
 	        conn = DriverManager.getConnection(url, user, password);
@@ -35,7 +33,9 @@ public class DtoWriter implements ItemWriter<List<LookUpData>> {
 		for (List<LookUpData> l : items) {
 			for (LookUpData ll : l) {
 				
-				PreparedStatement st = conn.prepareStatement("INSERT INTO GOV_FIN_LOOKUP (id,attribute_mapping_id,location_id,value,year) values (seq.nextval, ?, ?, ?, ?)");
+				try {
+				PreparedStatement st = conn.prepareStatement("INSERT INTO GOV_FIN_LOOKUP (attribute_mapping_id,location_id,value,year) values ( ?, ?, ?, ?)");
+				//st.setInt(1, i++);
 				st.setInt(1, ll.attribute_mapping_id);
 				st.setInt(2, ll.location_id);
 				st.setDouble(3, ll.value);
@@ -43,15 +43,20 @@ public class DtoWriter implements ItemWriter<List<LookUpData>> {
 				st.executeUpdate();
 				st.close();
 				
-				
+				}
+				catch(Exception e) {
+					System.out.println(e.getMessage());
+				}
 				/*System.out.println(ll.getAttribute_mapping_id());
 				String sql = "INSERT INTO GOV_FIN_LOOKUP (attribute_mapping_id,location_id,value,year) "
 		                + "VALUES " + "(" + ll.attribute_mapping_id + ", " + ll.location_id + ", " + ll.value + ", " + ll.year + ")";
 				Statement stmnt = null;
 				stmnt.executeUpdate(sql);*/
+				
 			}
 		}
 
+		System.out.println("Batch done");
 	}
 
 	public Connection connect() {
