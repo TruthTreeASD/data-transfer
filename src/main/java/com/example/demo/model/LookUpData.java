@@ -8,10 +8,11 @@ public class LookUpData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    String name;
+    
     int attribute_mapping_id;
     int location_id;
     int year;
+    
     double value;
     
 	public int getId() {
@@ -20,12 +21,7 @@ public class LookUpData {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+	
 	public int getAttribute_mapping_id() {
 		return attribute_mapping_id;
 	}

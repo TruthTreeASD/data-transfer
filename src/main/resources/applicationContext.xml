@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<bean id="jobRepository"
+		class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+	
+	<bean id="myDataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://gov-fin-dev.cfs8wixk7pzv.us-west-1.rds.amazonaws.com/postgres" />
+        <property name="username" value="gov_fin_dev" />
+        <property name="password" value="11111111" />
+        <!--<property name="socketTimeout" value="10"/>-->
+
+        <property name="connectionProperties">
+            <props>
+                <prop key="socketTimeout">10</prop>
+            </props>
+        </property>
+   </bean>
+   
+	<bean id="transactionManager"
+		class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
+		
+	<bean id="jobLauncher"
+		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+	
+	<bean id="fieldSetMapper"
+		class="com.example.demo.model.AttributeSetMapper"
+		 />
+<!-- 
+p:targetType="com.example.demo.model.StagingData" -->
+
+
+	<bean id="delimitedLineTokenizer"
+		class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer"
+		p:names="SurveyYr,Year4,YearofData,ID, IDChanged, State_Code, Type_Code, County, Name, FIPS_Code_State, FIPS_County, FIPS_Place, FYEndDate, YearPop, SchLevCode, Population, FunctionCode, 
+		Enrollment, Total_Revenue, Total_Rev_Own_Sources, General_Revenue, Gen_Rev_Own_Sources, Total_Taxes, Property_Tax, Tot_Sales___Gr_Rec_Tax, Total_Gen_Sales_Tax, Total_Select_Sales_Tax, Alcoholic_Beverage_Tax, 
+		Amusement_Tax, Insurance_Premium_Tax, Motor_Fuels_Tax, Pari_mutuels_Tax, Public_Utility_Tax, Tobacco_Tax, Other_Select_Sales_Tax, Total_License_Taxes, Alcoholic_Beverage_Lic, Amusement_License, Corporation_License, 
+		Hunting___Fishing_License, Motor_Vehicle_License, Motor_Veh_Oper_License, Motor_Vehicle_License_Total, Public_Utility_License, Occup_and_Bus_Lic_NEC, Other_License_Taxes,
+		Total_Income_Taxes, Individual_Income_Tax, Corp_Net_Income_Tax, Death_and_Gift_Tax, Docum_and_Stock_Tr_Tax, Severance_Tax, Taxes_NEC, Total_IG_Revenue, Total_Fed_IG_Revenue, 
+		Fed_IGR_Air_Transport, Fed_IGR_Education, Fed_IGR_Emp_Sec_Adm, Fed_IGR_Gen_Rev_Shar, Fed_IGR_Gen_Support, Fed_IGR_Health___Hos, Fed_IGR_Highways, Fed_IGR_Transit_Sub, 
+		Fed_IGR_Hous_Com_Dev, Fed_IGR_Natural_Res, Fed_IGR_Public_Welf, Fed_IGR_Sewerage, Fed_IGR_Other, Total_State_IG_Revenue, State_IGR_Education, State_IGR_Tax_Relief, 
+		State_IGR_Oth_Gen_Sup, State_IGR_Gen_Sup, State_IGR_Health___Hos, State_IGR_Highways, State_IGR_Transit_Sub, State_IGR_Hous_Com_Dev, State_IGR_Public_Welf, State_IGR_Sewerage, 
+		State_IGR_Other, Tot_Local_IG_Rev, Local_IGR_InterSchool_Aid, Local_IGR_Other_Education, Local_IGR_Oth_Gen_Sup, Local_IGR_Health___Hos, Local_IGR_Highways, 
+		Local_IGR_Transit_Sub, Local_IGR_Hous_Com_Dev, Local_IGR_Public_Welf, Local_IGR_Sewerage, Local_IGR_Other, Tot_Chgs_and_Misc_Rev, Total_General_Charges, Chg_Air_Transportation,
+		Chg_Misc_Com_Activ, Chg_Total_Education, Chg_Total_Elem_Education, Chg_Elem_Ed_Sch_Lunch, Chg_Elem_Ed_Tuition, Chg_Elem_Ed_NEC, Chg_Total_High_Ed, Chg_Hospitals, Chg_Highways, 
+		Chg_Regular_Highways, Chg_Toll_Highways, Chg_Housing___Comm_Dev, Chg_Total_Nat_Res, Chg_Parking, Chg_Parks___Recreation, Chg_Sewerage, Chg_Solid_Waste_Mgmt, Chg_Water_Transport, 
+		Chg_All_Other_NEC, Misc_General_Revenue, Special_Assessments, Prop_Sale_Total, Prop_Sale_Hous_Com_Dev, Prop_Sale_Other, Interest_Revenue, Fines_and_Forfeits, Rents_and_Royalties, 
+		Net_Lottery_Revenue, Misc_General_Rev_NEC, Liquor_Stores_Revenue, Total_Utility_Revenue, Water_Utility_Revenue, Electric_Utility_Rev, Gas_Utility_Rev, Transit_Utility_Rev, 
+		Total_Insur_Trust_Rev, Total_Insur_Trust_Ctrb, Tot_Ins_Trust_Inv_Rev, Total_Emp_Ret_Rev, Emp_Ret_Total_Ctrib, Emp_Ret_Loc_Emp_Ctrib, Emp_Ret_Loc_To_Loc_Sys, Emp_Ret_From_Other_Gov, 
+		Emp_Ret_Sta_To_Sta_Ctr, Emp_Ret_Int_Rev, Emp_Ret_Other_Earnings, Total_Unemp_Rev, Unemp_Payroll_Tax, Unemp_Int_Revenue, Unemp_Federal_Advances, Total_Expenditure, Total_IG_Expenditure, 
+		Direct_Expenditure, Total_Current_Expend, Total_Current_Oper, Total_Capital_Outlays, Total_Construction, Total_Other_Capital_Outlays, Tot_Assist___Subsidies, Total_Interest_on_Debt, 
+		Total_Insur_Trust_Ben, Total_Salaries___Wages, General_Expenditure, IG_Exp_To_State_Govt, IG_Exp_To_Local_Govts, IG_Exp_To_Federal_Govt, Direct_General_Expend, General_Current_Expend, 
+		General_Current_Oper, General_Capital_Outlay, General_Construction, General_Capital_Outlay_Other, General_Assist___Sub, General_Debt_Interest, Air_Trans_Total_Expend, Air_Trans_Direct_Expend, 
+		Air_Trans_Cap_Outlay, Air_Trans_Current_Exp, Air_Trans_Construction, Air_Trans_IG_To_State, Air_Trans_IG_Local_Govts, Misc_Com_Activ_Tot_Exp, Misc_Com_Activ_Cap_Out, Misc_Com_Activ_Current_Exp, 
+		Misc_Com_Activ_Constr, Correct_Total_Exp, Correct_Direct_Exp, Correct_Cap_Outlay, Correct_Current_Exp, Correct_Construct, Correct_IG_To_St, Correct_IG_Loc_Govts, Total_Educ_Total_Exp, 
+		Total_Educ_Direct_Exp, Total_Educ_Assist___Sub, Total_Educ_Cap_Outlay, Total_Educ_Current_Exp, Total_Educ_Construct, Elem_Educ_Total_Exp, Elem_Educ_Direct_Exp, Elem_Educ_Cap_Outlay, 
+		Elem_Educ_Current_Exp, Elem_Educ_Construction, Elem_Educ_IG_To_State, Elem_Educ_IG_Local_Govts, Elem_Educ_IG_Sch_to_Sch, Higher_Ed_Total_Exp, Higher_Ed_Direct_Exp, Higher_Ed_Cap_Outlay, 
+		Higher_Ed_Current_Exp, Higher_Ed_Construct, Higher_Ed_IG_To_St, Higher_Ed_IG_Loc_Govts, Educ_NEC_Total_Expend, Educ_NEC_Direct_Expend, Educ_NEC_Assistance, Educ_NEC_Cap_Outlay, 
+		Educ_NEC_Current_Exp, Educ_NEC_Construction, Educ_NEC_IG_To_State, Educ_NEC_IG_Local_Govts, Emp_Sec_Adm_Direct_Exp, Emp_Sec_Adm_Cap_Outlay, Emp_Sec_Adm_Current_Exp, 
+		Emp_Sec_Adm_Construct, Fin_Admin_Total_Exp, Fin_Admin_Direct_Exp, Fin_Admin_Cap_Outlay, Fin_Admin_Current_Exp, Fin_Admin_Construction, Fin_Admin_IG_To_State, Fin_Admin_IG_Local_Govts, 
+		Fire_Prot_Total_Expend, Fire_Prot_Direct_Exp, Fire_Prot_Cap_Outlay, Fire_Prot_Current_Exp, Fire_Prot_Construction, Fire_Prot_IG_To_State, Fire_Prot_IG_Local_Govts, Judicial_Total_Expend, 
+		Judicial_Direct_Expend, Judicial_Cap_Outlay, Judicial_Current_Exp, Judicial_Construction, Judicial_IG_To_State, Judicial_IG_Local_Govts, Cen_Staff_Total_Expend, Cen_Staff_Direct_Exp, 
+		Cen_Staff_Cap_Outlay, Cen_Staff_Current_Exp, Cen_Staff_Construction, Cen_Staff_IG_To_State, Cen_Staff_IG_Local_Govts, Gen_Pub_Bldg_Total_Exp, Gen_Pub_Bldg_Cap_Out, Gen_Pub_Bldg_Current_Exp, 
+		Gen_Pub_Bldg_Construct, Health_Total_Expend, Health_Direct_Expend, Health_Capital_Outlay, Health_Current_Exp, Health_Construction, Health_IG_To_State, Health_IG_Local_Govts, Total_Hospital_Total_Exp, 
+		Total_Hospital_Dir_Exp, Total_Hospital_Cap_Out, Total_Hospital_Current_Exp, Total_Hospital_Construct, Total_Hospital_IG_To_State, Total_Hospital_IG_Loc_Govts, Own_Hospital_Total_Exp, 
+		Own_Hospital_Cap_Out, Own_Hospital_Current_Exp, Own_Hospital_Construct, Hosp_Other_Total_Exp, Hosp_Other_Direct_Exp, Hosp_Other_Cap_Outlay, Hosp_Other_Current_Exp, Hosp_Other_Construct, 
+		Hosp_Other_IG_To_State, Hosp_Other_IG_Loc_Govts, Total_Highways_Tot_Exp, Total_Highways_Dir_Exp, Total_Highways_Cap_Out, Total_Highways_Current_Exp, Total_Highways_Construct, 
+		Regular_Hwy_Total_Exp, Regular_Hwy_Direct_Exp, Regular_Hwy_Cap_Outlay, Regular_Hwy_Current_Exp, Regular_Hwy_Construct, Regular_Hwy_IG_To_Sta, Regular_Hwy_IG_Loc_Govts, 
+		Toll_Hwy_Total_Expend, Toll_Hwy_Cap_Outlay, Toll_Hwy_Current_Exp, Toll_Hwy_Construction, Transit_Sub_Total_Exp, Transit_Sub_Direct_Sub, Transit_Sub_IG_To_Sta, Transit_Sub_IG_Loc_Govts, 
+		Transit_Sub_To_Own_Sys, Hous___Com_Total_Exp, Hous___Com_Direct_Exp, Hous___Com_Cap_Outlay, Hous___Com_Current_Exp, Hous___Com_Construct, Hous___Com_IG_To_State, Hous___Com_IG_Loc_Govts, 
+		Libraries_Total_Expend, Libraries_Direct_Exp, Libraries_Cap_Outlay, Libraries_Current_Exp, Libraries_Construction, Libraries_IG_To_State, Libraries_IG_Local_Govts, Natural_Res_Total_Exp, 
+		Natural_Res_Direct_Exp, Natural_Res_Cap_Outlay, Natural_Res_Current_Exp, Natural_Res_Construct, Natural_Res_IG_To_Sta, Natural_Res_IG_Loc_Govts, Parking_Total_Expend, Parking_Direct_Expend, 
+		Parking_Capital_Outlay, Parking_Current_Exp, Parking_Construction, Parking_IG_To_State, Parking_IG_Local_Govts, Parks___Rec_Total_Exp, Parks___Rec_Direct_Exp, Parks___Rec_Cap_Outlay, 
+		Parks___Rec_Current_Exp, Parks___Rec_Construct, Parks___Rec_IG_To_Sta, Parks___Rec_IG_Loc_Govts, Police_Prot_Total_Exp, Police_Prot_Direct_Exp, Police_Prot_Cap_Outlay, Police_Prot_Current_Exp, 
+		Police_Prot_Construct, Police_Prot_IG_To_Sta, Police_Prot_IG_Loc_Govts, Prot_Insp_Total_Exp, Prot_Insp_Direct_Exp, Prot_Insp_Cap_Outlay, Prot_Insp_Current_Exp, Prot_Insp_Construction, 
+		Prot_Insp_IG_To_State, Prot_Insp_IG_Local_Govts, Public_Welf_Total_Exp, Public_Welf_Direct_Exp, Public_Welf_Cash_Asst, Public_Welf_Cap_Outlay, Public_Welf_Current_Exp, Public_Welf_Construct, 
+		Welf_Categ_Total_Exp, Welf_Categ_Cash_Assist, Welf_Categ_IG_To_State, Welf_Categ_IG_Loc_Govts, Welf_Cash_Total_Exp, Welf_Cash_Cash_Assist, Welf_Cash_IG_Local_Govts, Welf_Vend_Pmts_Medical, 
+		Welf_Vend_Pmts_NEC, Welf_State_Share_Part_D, Welf_Ins_Total_Exp, Welf_Ins_Cap_Outlay, Welf_Ins_Current_Exp, Welf_Ins_Construction, Welf_NEC_Total_Expend, Welf_NEC_Direct_Expend, 
+		Welf_NEC_Cap_Outlay, Welf_NEC_Current_Exp, Welf_NEC_Construction, Welf_NEC_IG_To_State, Welf_NEC_IG_Local_Govts, Sewerage_Total_Expend, Sewerage_Direct_Expend, Sewerage_Cap_Outlay, 
+		Sewerage_Current_Exp, Sewerage_Construction, Sewerage_IG_To_State, Sewerage_IG_Local_Govts, SW_Mgmt_Total_Expend, SW_Mgmt_Direct_Expend, SW_Mgmt_Capital_Outlay, SW_Mgmt_Current_Exp, 
+		SW_Mgmt_Construction, SW_Mgmt_IG_To_State, SW_Mgmt_IG_Local_Govts, Water_Trans_Total_Exp, Water_Trans_Direct_Exp, Water_Trans_Cap_Outlay, Water_Trans_Current_Exp, Water_Trans_Construct, 
+		Water_Trans_IG_To_Sta, Water_Trans_IG_Loc_Govts, Interest_on_Gen_Debt, General_NEC_Total_Exp, General_NEC_Direct_Exp, VetBonus, General_NEC_Cap_Outlay, General_NEC_Current_Exp, General_NEC_Construct, 
+		General_NEC_IG_To_St, General_NEC_IG_Loc_Govts, General_NEC_IG_To_Fed, Liquor_Stores_Tot_Exp, Liquor_Stores_Cap_Out, Liquor_Stores_Current_Exp, Liquor_Stores_Constr, Total_Util_Total_Exp, 
+		Total_Util_Inter_Exp, Total_Util_Cap_Outlay, Total_Util_Current_Exp, Total_Util_Construct, Water_Util_Total_Exp, Water_Util_Inter_Exp, Water_Util_Cap_Outlay, Water_Util_Current_Exp, 
+		Water_Util_Construct, Elec_Util_Total_Exp, Elec_Util_Inter_Exp, Elec_Util_Cap_Outlay, Elec_Util_Current_Exp, Elec_Util_Construct, Gas_Util_Total_Exp, Gas_Util_Inter_Exp, Gas_Util_Cap_Outlay, 
+		Gas_Util_Current_Exp, Gas_Util_Construct, Trans_Util_Total_Exp, Trans_Util_Inter_Exp, Trans_Util_Cap_Outlay, Trans_Util_Current_Exp, Trans_Util_Construct, Emp_Ret_Total_Expend, 
+		Emp_Ret_Benefit_Paymts, Emp_Ret_Withdrawals, Emp_Ret_Other_Paymts, Unemp_Comp_Total_Exp, Unemp_Comp_Ben_Paymts, Unemp_Ext___Spec_Pmts, Total_Debt_Outstanding, 
+		Total_Long_Term_Debt_Out, ST_Debt_End_of_Year, Total_Beg_LTD_Out, Beg_LTD_Out_Private_Purp, Beg_LTD_Out_All_Other, Beg_LTD_Out_Utility, Beg_LTD_Out_Water_Util, 
+		Beg_LTD_Out_Elec_Util, Beg_LTD_Out_Gas_Util, Beg_LTD_Out_Trans_Util, Beg_LTD_Out_General, Beg_LTD_Out_Education, Beg_LTD_Out_Priv_Purp, Beg_LTD_Out_Other_NEC, Total_LTD_Issued, 
+		LTD_Iss_Private_Purp, LTD_Iss_All_Other, LTD_Iss_Utility, LTD_Iss_Util_Water, LTD_Iss_Util_Electric, LTD_Iss_Util_Gas_Supply, LTD_Iss_Util_Transit, LTD_Iss_General, 
+		LTD_Iss_Gen_Elem_Educ, LTD_Iss_Gen_Other_Educ, LTD_Iss_Gen_Other_NEC, Total_LTD_Iss_FFC, LTD_Iss_FFC_Utility, LTD_Iss_FFC_Water_Util, LTD_Iss_FFC_Elec_Util, LTD_Iss_FFC_Gas_Util, 
+		LTD_Iss_FFC_Trans_Util, LTD_Iss_FFC_General, LTD_Iss_FFC_Elem_Educ, LTD_Iss_FFC_Other_Educ, LTD_Iss_FFC_Other_NEC, Total_LTD_Iss_NG, LTD_Iss_NG_Utility, LTD_Iss_NG_Water_Util, 
+		LTD_Iss_NG_Elec_Util, LTD_Iss_NG_Gas_Util, LTD_Iss_NG_Trans_Util, LTD_Iss_NG_General, LTD_Iss_NG_Elem_Educ, LTD_Iss_NG_Other_Educ, LTD_Iss_NG_Private_Purp, LTD_Iss_NG_Other_NEC, 
+		Total_LTD_Iss_Unsp, LTD_Iss_Unsp_Utility, LTD_Iss_Unsp_Water_Util, LTD_Iss_Unsp_Elec_Util, LTD_Iss_Unsp_Gas_Util, LTD_Iss_Unsp_Trans_Util, LTD_Iss_Unsp_General, 
+		LTD_Iss_Unsp_Elem_Educ, LTD_Iss_Unsp_Other_Educ, LTD_Iss_Unsp_Other_NEC, Total_LTD_Retired, LTD_Ret_Private_Purp, LTD_Ret_All_Other, LTD_Ret_Utility, LTD_Ret_Util_Water, 
+		LTD_Ret_Util_Electric, LTD_Ret_Util_Gas_Supply, LTD_Ret_Util_Transit, LTD_Ret_General, LTD_Ret_Gen_Elem_Educ, LTD_Ret_Gen_Other_Educ, LTD_Ret_Gen_Other_NEC, Total_LTD_Ret_FFC, 
+		LTD_Ret_FFC_Utility, LTD_Ret_FFC_Water_Util, LTD_Ret_FFC_Elec_Util, LTD_Ret_FFC_Gas_Util, LTD_Ret_FFC_Trans_Util, LTD_Ret_FFC_General, LTD_Ret_FFC_Elem_Educ, LTD_Ret_FFC_Other_Educ, 
+		LTD_Ret_FFC_Other_NEC, Total_LTD_Ret_NG, LTD_Ret_NG_Utility, LTD_Ret_NG_Water_Util, LTD_Ret_NG_Elec_Util, LTD_Ret_NG_Gas_Util, LTD_Ret_NG_Trans_Util, LTD_Ret_NG_General, 
+		LTD_Ret_NG_Elem_Educ, LTD_Ret_NG_Other_Educ, LTD_Ret_NG_Private_Purp, LTD_Ret_NG_Other_NEC, Total_LTD_Ret_Unsp, LTD_Ret_Unsp_Utility, LTD_Ret_Unsp_Water_Util, 
+		LTD_Ret_Unsp_Elec_Utili, LTD_Ret_Unsp_Gas_Util, LTD_Ret_Unsp_Trans_Util, LTD_Ret_Unsp_General, LTD_Ret_Unsp_Elem_Educ, LTD_Ret_Unsp_Other_Educ, LTD_Ret_Unsp_Other_NEC, 
+		Total_LTD_Out, LTD_Out_Private_Purp, LTD_Out_All_Other, Total_LTD_Out_Utility, LTD_Out_Util_Water, LTD_Out_Util_Electric, LTD_Out_Util_Gas_Supply, LTD_Out_Util_Transit, 
+		LTD_Out_General, LTD_Out_Gen_Elem_Educ, LTD_Out_Gen_Other_Educ, LTD_Out_Gen_Other_NEC, Total_LTD_Out_FFC, LTD_Out_FFC_Utility, LTD_Out_FFC_Water_Util, LTD_Out_FFC_Elec_Util, 
+		LTD_Out_FFC_Gas_Util, LTD_Out_FFC_Trans_Util, LTD_Out_FFC_General, LTD_Out_FFC_Elem_Educ, LTD_Out_FFC_Other_Educ, LTD_Out_FFC_Other_NEC, Tot_LTD_Out_NG, LTD_Out_NG_Utility, 
+		LTD_Out_NG_Water_Util, LTD_Out_NG_Elec_Util, LTD_Out_NG_Gas_Util, LTD_Out_NG_Trans_Util, LTD_Out_NG_General, LTD_Out_NG_Elem_Educ, LTD_Out_NG_Other_Educ, LTD_Out_NG_Private_Purp, 
+		LTD_Out_NG_Other_NEC, Total_Cash___Securities, Insur_Trust_Cash___Sec, Emp_Retire_Cash___Sec, Emp_Retire_Cash___Dep, Emp_Retire_Total_Sec, Emp_Retire_Sec_Tot_Fed, 
+		Emp_Retire_Sec_S_L_Secur, Emp_Retire_Sec_Tot_Nong, Emp_Retire_Sec_Corp_Bds, Emp_Retire_Sec_Corp_Stk, Emp_Retire_Sec_Mortgages, Emp_Retire_Sec_Misc_Inv, Emp_Retire_Sec_Oth_Nong, 
+		Unemp_Comp_Cash___Sec, Unemp_Comp_Bal_In_US_Trs, Unemp_Comp_Other_Balance, Nonin_Trust_Cash___Sec, Sinking_Fd_Cash___Sec, Bond_Fd_Cash___Sec, Oth_Nonin_Fd_Cash___Sec" />
+
+	<bean id="lineMapper"
+		class="org.springframework.batch.item.file.mapping.DefaultLineMapper"
+		p:lineTokenizer-ref="delimitedLineTokenizer" p:fieldSetMapper-ref="fieldSetMapper" />
+		
+	<bean id="fieldExtractor" class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor"
+          p:names="make, model, color, doors"/>
+
+    <bean id="lineAggregator" class="org.springframework.batch.item.file.transform.DelimitedLineAggregator"
+          p:fieldExtractor-ref="fieldExtractor"/>
+          
+
+	<bean id="csvItemReader" class="org.springframework.batch.item.file.FlatFileItemReader"
+		p:resource="test.csv" p:lineMapper-ref="lineMapper" p:linesToSkip="1"/>
+		
+	<bean id="dtoWriter" class="com.example.demo.model.DtoWriter"
+        />
+     
+     <bean id="finProcessor" class= "com.example.demo.model.RecordMapperToLookUp"></bean>
+     
+</beans>
