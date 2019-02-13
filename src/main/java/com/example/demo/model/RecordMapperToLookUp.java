@@ -8,8 +8,6 @@ import org.springframework.batch.item.ItemProcessor;
 
 public class RecordMapperToLookUp implements ItemProcessor<RecordMap,Object> {
 
-	
-	
 	@Override
 	public List<LookUpData> process(RecordMap item) throws Exception {
 		List<LookUpData> ld = new ArrayList<>();

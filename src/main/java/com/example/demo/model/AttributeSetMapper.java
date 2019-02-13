@@ -1177,9 +1177,6 @@ public class AttributeSetMapper implements FieldSetMapper {
 		rec.getData().put(AttributeEnum.Bond_Fd_Cash___Sec.getValue(),fieldSet.readInt("Bond_Fd_Cash___Sec"));}
 		if ( fieldSet.readString("Oth_Nonin_Fd_Cash___Sec").trim().length() > 0 && fieldSet.readInt("Oth_Nonin_Fd_Cash___Sec") != 0) {
 		rec.getData().put(AttributeEnum.Oth_Nonin_Fd_Cash___Sec.getValue(),fieldSet.readInt("Oth_Nonin_Fd_Cash___Sec"));}
-
-	
-
 		return rec;
 	}
 	

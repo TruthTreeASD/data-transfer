@@ -34,7 +34,7 @@ public class DtoWriter implements ItemWriter<List<LookUpData>> {
 			for (LookUpData ll : l) {
 				
 				try {
-					//st.setInt(1, i++);
+			
 				st.setInt(1, ll.attribute_mapping_id);
 				st.setInt(2, ll.location_id);
 				st.setDouble(3, ll.value);
@@ -43,17 +43,12 @@ public class DtoWriter implements ItemWriter<List<LookUpData>> {
 				
 				}
 				catch(Exception e) {
-					System.out.println(e.getMessage());
+					//System.out.println(e.getMessage());
 				}
-				/*System.out.println(ll.getAttribute_mapping_id());
-				String sql = "INSERT INTO GOV_FIN_LOOKUP (attribute_mapping_id,location_id,value,year) "
-		                + "VALUES " + "(" + ll.attribute_mapping_id + ", " + ll.location_id + ", " + ll.value + ", " + ll.year + ")";
-				Statement stmnt = null;
-				stmnt.executeUpdate(sql);*/
 				
 			}
 			
-			System.out.println("done for record: "+i++);
+		//	System.out.println("done for record: "+i++);
 			
 		}
 		st.close();
