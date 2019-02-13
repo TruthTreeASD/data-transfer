@@ -126,7 +126,7 @@ p:targetType="com.example.demo.model.StagingData" -->
           
 
 	<bean id="csvItemReader" class="org.springframework.batch.item.file.FlatFileItemReader"
-		p:resource="test.csv" p:lineMapper-ref="lineMapper" p:linesToSkip="1"/>
+		p:resource="CountyData.csv" p:lineMapper-ref="lineMapper" p:linesToSkip="1"/>
 		
 	<bean id="dtoWriter" class="com.example.demo.model.DtoWriter"
         />
