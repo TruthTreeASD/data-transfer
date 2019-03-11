@@ -32,7 +32,7 @@
 	</bean>
 	
 	<bean id="fieldSetMapper"
-		class="com.example.demo.model.AttributeSetMapper"
+		class="edu.neu.cs6510.model.AttributeSetMapper"
 		 />
 <!-- 
 p:targetType="com.example.demo.model.StagingData" -->
@@ -128,9 +128,9 @@ p:targetType="com.example.demo.model.StagingData" -->
 	<bean id="csvItemReader" class="org.springframework.batch.item.file.FlatFileItemReader"
 		p:resource="CountyData.csv" p:lineMapper-ref="lineMapper" p:linesToSkip="1000"/>
 		
-	<bean id="dtoWriter" class="com.example.demo.model.DtoWriter"
+	<bean id="dtoWriter" class="edu.neu.cs6510.model.DtoWriter"
         />
      
-     <bean id="finProcessor" class= "com.example.demo.model.RecordMapperToLookUp"></bean>
+     <bean id="finProcessor" class= "edu.neu.cs6510.model.RecordMapperToLookUp"></bean>
      
 </beans>

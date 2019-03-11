@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package edu.neu.cs6510.model;
 
 public enum AttributeEnum {
 
